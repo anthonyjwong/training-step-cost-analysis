@@ -26,5 +26,21 @@ write_once() {
   [ -e "$out" ] || "$@" >"$out"
 }
 
+# Move fetched files (<src>/<folder>/<file>) into out/<folder>/, refusing to replace
+# any that exist.
+move_new() {
+  local src=$1 f dest
+  for f in "$src"/*/*; do
+    [ -e "$f" ] || continue
+    dest="out/$(basename "$(dirname "$f")")/$(basename "$f")"
+    if [ -e "$dest" ]; then
+      echo "error: $dest exists; not overwriting" >&2
+      return 1
+    fi
+    mkdir -p "$(dirname "$dest")"
+    mv "$f" "$dest"
+  done
+}
+
 # Settings that SMOKE=1 passes to every run (empty for a real run).
 RUN_OVERRIDES=${RUN_OVERRIDES:-}
