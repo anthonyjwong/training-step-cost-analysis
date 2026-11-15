@@ -67,6 +67,16 @@ def get_gcp_prices(sku: CatalogSku) -> tuple[float, str]:
     return usd, expression["usageUnitDescription"]
 
 
+def get_cloud_rates(rows: list[dict[str, str]]) -> dict[GcpSku, float]:
+    by_sku_name = {row["name"]: float(row["usd"]) for row in rows}
+    missing = [
+        sku.name.lower() for sku in GcpSku if sku.name.lower() not in by_sku_name
+    ]
+    if missing:
+        raise ValueError(f"{PRICES_CSV} has no price for {', '.join(missing)}")
+    return {sku: by_sku_name[sku.name.lower()] for sku in GcpSku}
+
+
 def write_output(prices: list[SkuPrice]):
     write_csv(PRICES_CSV, prices)
 

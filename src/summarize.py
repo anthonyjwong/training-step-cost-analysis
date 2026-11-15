@@ -2,6 +2,7 @@ import math
 import re
 import statistics
 from dataclasses import dataclass
+from typing import Self
 
 from measure_.benchmark import Benchmark
 from measure_.peaks import Roof
@@ -34,6 +35,24 @@ class BenchSummary:
     images_per_second: float
     arithmetic_intensity: float
     achieved_gflops: float
+
+    @classmethod
+    def from_csv_row(cls, row: dict[str, str]) -> Self:
+        return cls(
+            env=row["env"],
+            model_name=row["model_name"],
+            batch_size=int(row["batch_size"]),
+            runs=int(row["runs"]),
+            median_seconds=float(row["median_seconds"]),
+            median_seconds_cv=float(row["median_seconds_cv"]),
+            mean_seconds=float(row["mean_seconds"]),
+            mean_seconds_cv=float(row["mean_seconds_cv"]),
+            step_stdev_seconds=float(row["step_stdev_seconds"]),
+            step_cv=float(row["step_cv"]),
+            images_per_second=float(row["images_per_second"]),
+            arithmetic_intensity=float(row["arithmetic_intensity"]),
+            achieved_gflops=float(row["achieved_gflops"]),
+        )
 
 
 def get_base_env(env: str) -> str:
