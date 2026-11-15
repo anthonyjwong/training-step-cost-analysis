@@ -53,6 +53,10 @@ def getenv[T](name: str, default: T, cast: Callable[[str], T]) -> T:
     return default if not value else cast(value)
 
 
+def getenv_flag(name: str) -> bool:
+    return getenv(name, False, lambda value: value.lower() in ("1", "true", "yes"))
+
+
 def getenv_list[T](name: str, default: list[T], cast: Callable[[str], T]) -> list[T]:
     value = os.environ.get(name)
     return default if not value else [cast(v) for v in value.split()]
