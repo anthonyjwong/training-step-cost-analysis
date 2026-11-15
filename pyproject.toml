@@ -1,0 +1,19 @@
+[tool.black]
+line-length = 88
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+# ruff's defaults (E4, E7, E9, F) plus ANN: every function needs type hints
+select = ["E4", "E7", "E9", "F", "ANN"]
+
+[tool.ruff.lint.flake8-annotations]
+# functions that return None need no "-> None"
+suppress-none-returning = true
+
+[tool.basedpyright]
+# allow ignoring return values without "_ ="
+reportUnusedCallResult = false
+reportMissingTypeStubs = false  # torchvision ships no type hints
+reportUnknownMemberType = false  # torch leaves some parameters untyped
