@@ -8,12 +8,16 @@ from dataclasses import asdict, dataclass
 from typing import TYPE_CHECKING, Self, cast
 
 import torch
+from dotenv import load_dotenv
 
 if TYPE_CHECKING:
     # exists only for type checkers; importing it at runtime fails
     from _typeshed import DataclassInstance
 
 MODELS = ["resnet18", "mobilenet_v2", "vgg16"]
+
+project_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+load_dotenv(os.path.join(project_dir, os.environ.get("ENV_FILE", ".env.local")))
 
 
 @dataclass
