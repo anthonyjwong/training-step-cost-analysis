@@ -3,6 +3,7 @@ import os
 import time
 from collections.abc import Callable
 from dataclasses import dataclass
+from typing import Self
 
 import torch
 
@@ -23,6 +24,17 @@ class Roof:
     peak_gflops: float
     peak_gbs: float
     ridge: float
+
+    @classmethod
+    def from_csv_row(cls, row: dict[str, str]) -> Self:
+        return cls(
+            env=row["env"],
+            seed=int(row["seed"]),
+            machine=MachineInfo.from_csv_row(row),
+            peak_gflops=float(row["peak_gflops"]),
+            peak_gbs=float(row["peak_gbs"]),
+            ridge=float(row["ridge"]),
+        )
 
 
 def get_best_time(

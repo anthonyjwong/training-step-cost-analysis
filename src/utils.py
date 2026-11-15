@@ -1,4 +1,5 @@
 import csv
+import glob
 import os
 import platform
 import random
@@ -47,6 +48,17 @@ class MachineInfo:
             cpu_count=os.cpu_count() or 0,
         )
 
+    @classmethod
+    def from_csv_row(cls, row: dict[str, str]) -> Self:
+        return cls(
+            host=row["host"],
+            device=row["device"],
+            device_name=row["device_name"],
+            torch_version=row["torch_version"],
+            threads=int(row["threads"]),
+            cpu_count=int(row["cpu_count"]),
+        )
+
 
 def getenv[T](name: str, default: T, cast: Callable[[str], T]) -> T:
     value = os.environ.get(name)
@@ -93,3 +105,20 @@ def write_csv(path: str, records: Sequence["DataclassInstance"]):
         writer = csv.DictWriter(f, fieldnames=rows[0].keys())
         writer.writeheader()
         writer.writerows(rows)
+
+
+def read_csv(pattern: str) -> list[dict[str, str]]:
+    rows: list[dict[str, str]] = []
+    for path in sorted(glob.glob(pattern)):
+        with open(path) as f:
+            rows += list(csv.DictReader(f))
+
+    return rows
+
+
+def read_stage_csv(pattern: str, stage: str) -> list[dict[str, str]]:
+    rows = read_csv(pattern)
+    if not rows:
+        raise FileNotFoundError(f"{pattern} is missing: run `python src/{stage}.py`")
+
+    return rows

@@ -4,7 +4,7 @@ import statistics
 import time
 from collections.abc import Callable
 from dataclasses import dataclass
-from typing import cast
+from typing import Self, cast
 
 import torch
 import torch.nn as nn
@@ -36,6 +36,23 @@ class Benchmark:
     images_per_second: float
     arithmetic_intensity: float
     achieved_gflops: float
+
+    @classmethod
+    def from_csv_row(cls, row: dict[str, str]) -> Self:
+        return cls(
+            env=row["env"],
+            seed=int(row["seed"]),
+            machine=MachineInfo.from_csv_row(row),
+            model_name=row["model_name"],
+            batch_size=int(row["batch_size"]),
+            steps=int(row["steps"]),
+            median_seconds=float(row["median_seconds"]),
+            mean_seconds=float(row["mean_seconds"]),
+            stdev_seconds=float(row["stdev_seconds"]),
+            images_per_second=float(row["images_per_second"]),
+            arithmetic_intensity=float(row["arithmetic_intensity"]),
+            achieved_gflops=float(row["achieved_gflops"]),
+        )
 
 
 def get_train_step(
