@@ -19,6 +19,18 @@ class RoofSummary:
     peak_gbs_cv: float
     ridge: float
 
+    @classmethod
+    def from_csv_row(cls, row: dict[str, str]) -> Self:
+        return cls(
+            env=row["env"],
+            runs=int(row["runs"]),
+            peak_gflops=float(row["peak_gflops"]),
+            peak_gflops_cv=float(row["peak_gflops_cv"]),
+            peak_gbs=float(row["peak_gbs"]),
+            peak_gbs_cv=float(row["peak_gbs_cv"]),
+            ridge=float(row["ridge"]),
+        )
+
 
 @dataclass
 class BenchSummary:
